@@ -6,7 +6,7 @@ import re
 import os
 import time
 from datetime import datetime
-
+from zenrows import ZenRowsClient
 
 def clean_header(head):
     header_dict = {}
@@ -85,6 +85,37 @@ def get_soup_verify(url, headers=None):
     else:
         status_log(r)
         return None
+
+@retry
+def get_zenrowa(url, params=None):
+    api_list = ['1e8cb006ec4177a86afaa3567dbfdb3d2e870c5b', 'f8d6d1f2fea9a90579597c47d7b81ff0ea990d11']
+    for single_api in api_list:
+        client = ZenRowsClient(single_api)
+        r = client.get(url, params = params)
+        if r.status_code == 200:
+            soup = BeautifulSoup(r.text, 'html.parser')
+            return soup
+        elif 499 >= r.status_code >= 400:
+            print(f'client error response, status code {r.status_code} \nrefer: {r.url}')
+            status_log(r)
+        elif 599 >= r.status_code >= 500:
+            print(f'server error response, status code {r.status_code} \nrefer: {r.url}')
+            count = 1
+            while count != 10:
+                print('while', count)
+                client = ZenRowsClient(api_list)
+                r = client.get(url, params=params)
+                print('status_code: ', r.status_code)
+                if r.status_code == 200:
+                    soup = BeautifulSoup(r.text, 'html.parser')
+                    return soup
+                else:
+                    print('retry ', count)
+                    count += 1
+                    time.sleep(count * 2)
+            else:
+                status_log(r)
+                return None
 
 
 @retry
