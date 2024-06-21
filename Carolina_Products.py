@@ -54,7 +54,7 @@ if __name__ == '__main__':
     soup = get_soup(url, headers)
     content = soup.find('li', class_='nav-item c-nav-menu-link').find_all('li', class_='row c-nav-menu-l1')
     for single_content in content:
-        inner_content = single_content.fincd('div', class_='c-nav-menu-subnav col-12 col-lg-7')
+        inner_content = single_content.find('div', class_='c-nav-menu-subnav col-12 col-lg-7')
         product_category = inner_content.find('h3', class_='d-none d-lg-block').text.strip()
         if inner_content.find('ul', class_='row'):
             all_urls = inner_content.find('ul', class_='row').find_all('li')
@@ -62,8 +62,8 @@ if __name__ == '__main__':
                 product_sub_category = single_url.a.text.strip()
                 main_url = f"{base_url}{single_url.a['href']}"
                 print(f'main_url -----------> {main_url}')
-                # if main_url in read_log_file():
-                #     continue
+                if main_url in read_log_file():
+                    continue
                 random_sleep(1, 10)
                 inner_request = get_soup(main_url, headers)
                 if inner_request is None:
@@ -112,7 +112,7 @@ if __name__ == '__main__':
                                             for inner_json in json_content['offers']:
                                                 '''PRICE'''
                                                 try:
-                                                    product_price = inner_json['price']
+                                                    product_price = f"$ {inner_json['price']}"
                                                 except:
                                                     product_price = ''
                                                 '''PRODUCT URL'''
@@ -130,7 +130,7 @@ if __name__ == '__main__':
                                                         product_quantity = 1
                                                 except:
                                                     product_name = json_content['name']
-                                                    product_quantity = ''
+                                                    product_quantity = '1'
                                                 '''PRODUCT DESC'''
                                                 try:
                                                     desc = inner_json['description']
@@ -191,7 +191,7 @@ if __name__ == '__main__':
                                         for inner_json in json_content['offers']:
                                             '''PRICE'''
                                             try:
-                                                product_price = inner_json['price']
+                                                product_price = f"$ {inner_json['price']}"
                                             except:
                                                 product_price = ''
                                             '''PRODUCT URL'''
@@ -285,7 +285,7 @@ if __name__ == '__main__':
                                         for inner_json in json_content['offers']:
                                             '''PRICE'''
                                             try:
-                                                product_price = inner_json['price']
+                                                product_price = f"$ {inner_json['price']}"
                                             except:
                                                 product_price = ''
                                             '''PRODUCT URL'''
@@ -365,7 +365,7 @@ if __name__ == '__main__':
                                     for inner_json in json_content['offers']:
                                         '''PRICE'''
                                         try:
-                                            product_price = inner_json['price']
+                                            product_price = f"$ {inner_json['price']}"
                                         except:
                                             product_price = ''
                                         '''PRODUCT URL'''
@@ -457,7 +457,7 @@ if __name__ == '__main__':
                                 for inner_json in json_content['offers']:
                                     '''PRICE'''
                                     try:
-                                        product_price = inner_json['price']
+                                        product_price = f"$ {inner_json['price']}"
                                     except:
                                         product_price = ''
                                     '''PRODUCT URL'''
@@ -537,7 +537,7 @@ if __name__ == '__main__':
                             for inner_json in json_content['offers']:
                                 '''PRICE'''
                                 try:
-                                    product_price = inner_json['price']
+                                    product_price = f"$ {inner_json['price']}"
                                 except:
                                     product_price = ''
                                 '''PRODUCT URL'''
